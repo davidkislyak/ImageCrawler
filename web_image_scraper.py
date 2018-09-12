@@ -13,28 +13,29 @@ IMAGES_DIRECTORY = "./images"
 
 
 # single image downloader
-def get_image(url):
+def get_image(url: str):
     # Fixes SSL Error
     ssl._create_default_https_context = ssl._create_unverified_context
     wget.download(url, IMAGES_DIRECTORY)
 
 
 # page multiple images scrape
-def scrape_page(url):
+def scrape_page(url: str):
     # Create Instance
     session = HTMLSession()
 
     # Retrieve html content
     r = session.get(url).html
 
-    # Trick javascript to spit out all dynamic images (Does cause .05 - 3 sec scrape delay)
+    # Trigger javascript dynamic images (causes 0.05 - 3.0 scrape delay)
     # TODO: add launch parameter to enable and disable JS image scraping
     r.render()
 
     # Find all image elements
     b = r.find("img", first=False)
 
-    # Split each element into a parameter Dict (like src, alt, etc...) and retrieve url from "src" key
+    # Split each element into a parameter Dict (like src, alt, etc...)
+    # and retrieve url from "src" key
     if len(b) == 1:
         get_image(url[0:-1] + (b[0].attrs['src']))
     else:  # Multiple image elements
@@ -72,7 +73,7 @@ def interactive_scrape():
     elif menu_selection == "2":
         page_url = input("Enter the url of the image you would like scraped:")
         scrape_page(page_url)
-    #TODO: implement error message/reprompt for incorrect user input
+    # TODO: implement error message/reprompt for incorrect user input
 
 
 if __name__ == "__main__":
