@@ -3,11 +3,8 @@
 # Image crawler for sites
 
 from requests_html import HTMLSession
-
-# TODO: Utilize or remove libraries for single file download
-# import urllib.request
 import wget
-
+import ssl
 import sys
 
 # -----Scraper functions-----
@@ -17,9 +14,9 @@ IMAGES_DIRECTORY = "./images"
 
 # single image downloader
 def get_image(url):
-    # TODO: Create functional SINGLE IMAGE downloader without ssl errors :)
-    wget.download(url, IMAGES_DIRECTORY)  # Throws SSL Error for https://python.org/
-    # urllib.request.urlretrieve(url, IMAGES_DIRECTORY)  # Doesn't work either
+    # Fixes SSL Error
+    ssl._create_default_https_context = ssl._create_unverified_context
+    wget.download(url, IMAGES_DIRECTORY)
 
 
 # page multiple images scrape
@@ -73,8 +70,6 @@ def interactive_scrape():
         page_url = input("Enter the url of the image you would like scraped:")
         get_image(page_url)
     elif menu_selection == "2":
-        # TODO: remove static link
-        # page_url = "https://www.python.org/"
         page_url = input("Enter the url of the image you would like scraped:")
         scrape_page(page_url)
     #TODO: implement error message/reprompt for incorrect user input
